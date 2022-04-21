@@ -5,24 +5,30 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 # send request to the url
-html = requests.get("http://www.baidu.com")
-print(html.encoding)
-print(html.apparent_encoding)
-html.encoding = "utf-8"
+baidu_html = requests.get("http://www.baidu.com")
+print(baidu_html.encoding)
+print(baidu_html.apparent_encoding)
+baidu_html.encoding = "utf-8"
 
 # print out the html string
-print(html.text)
+# print(baidu_html.text)
 
 # parse the html using beautiful soup
-parse_html = bs(html.text, "html.parser")
+parse_baidu = bs(baidu_html.text, "html.parser")
 
 # get the title from <head> then <title>
-title = parse_html.find('head').find('title').text
+title = parse_baidu.find('head').find('title').text
 
 # print out the title
 print(title) # 百度一下，你就知道
 
-#s_xmancard_news_new > div > div.s-news-rank-wrapper.s-news-special-rank-wrapper.c-container-r > div > div > ul
-trendingList = parse_html.find("ul", {"class": "s-news-rank-content"}) # 热搜不在百度首页，需要request热搜的网址
+resou_html = requests.get("https://top.baidu.com/board")
+resou_html.encoding = "utf-8"
 
-print(trendingList)
+parse_resou = bs(resou_html.text, "html.parser")
+
+# trendingList = parse_resou.find("div", {"class": "theme-hot"}).find_all("div", {"class": "c-single-text-ellipsis"})
+for div in parse_resou.find("div", {"class": "theme-hot"}).find_all("div", {"class": "c-single-text-ellipsis"}):
+    print(div.text)
+
+
